@@ -1,0 +1,56 @@
+Project SpendWise {
+  database_type: 'PostgreSQL'
+  Note: 'Multi-tenant expense tracker capstone'
+}
+Table tenants {
+  id bigint [pk, increment]
+  name varchar(120) [not null]
+  created_at timestamptz [not null]
+}
+Table app_users {
+  id bigint [pk, increment]
+  tenant_id bigint [not null, ref: > tenants.id]
+  email varchar(254) [not null]
+  display_name varchar(120) [not null]
+  created_at timestamptz [not null]
+  indexes { (tenant_id, email) [unique] }
+}
+Table categories {
+  id bigint [pk, increment]
+  tenant_id bigint [not null, ref: > tenants.id]
+  name varchar(80) [not null]
+  created_at timestamptz [not null]
+  indexes {
+    (tenant_id, name) [unique]
+    (tenant_id, id) [unique]
+  }
+}
+Table expenses {
+  id bigint [pk, increment]
+  tenant_id bigint [not null, ref: > tenants.id]
+  category_id bigint [not null]
+  created_by bigint [not null]
+  amount numeric(12,2) [not null]
+  currency char(3) [not null]
+  description varchar(500)
+  spent_on date [not null]
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+  indexes {
+    (tenant_id, spent_on)
+    (tenant_id, category_id, spent_on)
+  }
+}
+Table expense_audit {
+  id bigint [pk, increment]
+  tenant_id bigint
+  expense_id bigint
+  action varchar(10) [not null]
+  changed_at timestamptz [not null]
+  changed_by text
+  old_row jsonb
+  new_row jsonb
+}
+Ref: expenses.(tenant_id, category_id) > categories.(tenant_id, id)
+Ref: expenses.(tenant_id, created_by) > app_users.(tenant_id, id)
+Ref: expense_audit.tenant_id > tenants.id
