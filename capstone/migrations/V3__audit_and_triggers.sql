@@ -30,6 +30,8 @@ BEGIN
  END IF;
 END;
 $$;
+
+-- BEFORE ensures updated_at and audit snapshots are captured before row storage.
 CREATE TRIGGER trg_expenses_audit
-AFTER INSERT OR UPDATE OR DELETE ON expenses
+BEFORE INSERT OR UPDATE OR DELETE ON expenses
 FOR EACH ROW EXECUTE FUNCTION audit_expense_change();
