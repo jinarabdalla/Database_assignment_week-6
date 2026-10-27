@@ -1,0 +1,54 @@
+// Paste into https://dbdiagram.io
+Table tenants {
+  id uuid [pk]
+  name varchar(120) [not null]
+  created_at timestamptz [not null]
+}
+Table app_users {
+  id uuid [pk]
+  tenant_id uuid [not null, ref: > tenants.id]
+  email varchar(254) [not null]
+  display_name varchar(120) [not null]
+  role varchar(20) [not null]
+  created_at timestamptz [not null]
+  indexes { (tenant_id, email) [unique] }
+}
+Table categories {
+  id uuid [pk]
+  tenant_id uuid [not null, ref: > tenants.id]
+  name varchar(80) [not null]
+  created_at timestamptz [not null]
+  indexes { (tenant_id, name) [unique] }
+}
+Table expenses {
+  id uuid [pk]
+  tenant_id uuid [not null, ref: > tenants.id]
+  user_id uuid [not null, ref: > app_users.id]
+  category_id uuid [ref: > categories.id]
+  amount numeric(12,2) [not null]
+  currency char(3) [not null]
+  description varchar(500)
+  spent_on date [not null]
+  attributes jsonb
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+  deleted_at timestamptz
+}
+Table audit_log {
+  id bigint [pk, increment]
+  tenant_id uuid [not null]
+  table_name text [not null]
+  record_id uuid [not null]
+  action text [not null]
+  changed_by text
+  changed_at timestamptz [not null]
+  old_data jsonb
+  new_data jsonb
+}
+Ref: tenants.id < app_users.tenant_id
+Ref: tenants.id < categories.tenant_id
+Ref: tenants.id < expenses.tenant_id
+Ref: app_users.id < expenses.user_id
+Ref: categories.id < expenses.category_id
+// One tenant has many users, categories, and expenses. One user creates many expenses.
+// One category classifies many expenses; expense category is optional. Audit rows record row events.
