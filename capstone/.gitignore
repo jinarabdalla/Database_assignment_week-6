@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+backups/
+*.dump
+*.sql.gz
+*.log
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.vscode/
+.idea/
