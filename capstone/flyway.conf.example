@@ -1,0 +1,5 @@
+# Copy locally to flyway.conf; never commit real credentials.
+flyway.url=jdbc:postgresql://localhost:5432/capstone
+flyway.user=YOUR_MIGRATION_USER
+flyway.locations=filesystem:capstone/migrations
+# Set password via environment variable or secret manager.
