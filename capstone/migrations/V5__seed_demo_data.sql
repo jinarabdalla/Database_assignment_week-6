@@ -1,14 +1,4 @@
-INSERT INTO tenants (id, name) VALUES (1, 'Demo Household');
-INSERT INTO app_users (id, tenant_id, email, display_name)
- VALUES (1, 1, 'demo@example.test', 'Demo User');
-INSERT INTO categories (id, tenant_id, name) VALUES
- (1, 1, 'Food'), (2, 1, 'Transport'), (3, 1, 'Utilities'), (4, 1, 'Savings');
-INSERT INTO expenses (id, tenant_id, category_id, created_by, amount, currency, description, spent_on) VALUES
- (1, 1, 1, 1, 450.00, 'KES', 'Groceries', CURRENT_DATE - 2),
- (2, 1, 2, 1, 120.00, 'KES', 'Bus fare', CURRENT_DATE - 1),
- (3, 1, 3, 1, 1800.00, 'KES', 'Electricity token', CURRENT_DATE),
- (4, 1, 1, 1, 300.00, 'KES', 'Market vegetables', CURRENT_DATE);
-SELECT setval(pg_get_serial_sequence('tenants','id'), COALESCE((SELECT max(id) FROM tenants),1));
-SELECT setval(pg_get_serial_sequence('app_users','id'), COALESCE((SELECT max(id) FROM app_users),1));
-SELECT setval(pg_get_serial_sequence('categories','id'), COALESCE((SELECT max(id) FROM categories),1));
-SELECT setval(pg_get_serial_sequence('expenses','id'), COALESCE((SELECT max(id) FROM expenses),1));
+INSERT INTO tenants (id,name) VALUES ('11111111-1111-4111-8111-111111111111','Demo Household'),('22222222-2222-4222-8222-222222222222','Second Demo Household');
+INSERT INTO app_users (id,tenant_id,email,display_name,role) VALUES ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','11111111-1111-4111-8111-111111111111','amina@example.test','Amina Demo','tenant_admin'),('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','22222222-2222-4222-8222-222222222222','omar@example.test','Omar Demo','tenant_admin');
+INSERT INTO categories (id,tenant_id,name) VALUES ('cccccccc-cccc-4ccc-8ccc-cccccccccccc','11111111-1111-4111-8111-111111111111','Food'),('dddddddd-dddd-4ddd-8ddd-dddddddddddd','11111111-1111-4111-8111-111111111111','Transport'),('eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee','22222222-2222-4222-8222-222222222222','Utilities');
+INSERT INTO expenses (id,tenant_id,user_id,category_id,amount,currency,description,spent_on,attributes) VALUES ('f1111111-1111-4111-8111-111111111111','11111111-1111-4111-8111-111111111111','aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','cccccccc-cccc-4ccc-8ccc-cccccccccccc',450.00,'KES','Weekly groceries',CURRENT_DATE-2,'{"merchant":"Demo Market","payment_method":"cash"}'),('f2222222-2222-4222-8222-222222222222','11111111-1111-4111-8111-111111111111','aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','dddddddd-dddd-4ddd-8ddd-dddddddddddd',120.00,'KES','Bus fare',CURRENT_DATE-1,'{"route":"demo route"}'),('f3333333-3333-4333-8333-333333333333','22222222-2222-4222-8222-222222222222','bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',900.00,'KES','Electricity token',CURRENT_DATE,'{"provider":"demo utility"}');
